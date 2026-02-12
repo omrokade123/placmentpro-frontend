@@ -81,24 +81,18 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <DashboardLayout>
-                <MyExperiences/>
+                <MyExperiences />
               </DashboardLayout>
             </ProtectedRoute>
           }
         />
 
-        <Route
-          path="/admin"
-          element={
-            <AdminRoute>
-              <AdminLayout />
-            </AdminRoute>
-          }
-        >
-          <Route index element={<AdminDashboard />} />
-
-          <Route path="experiences" element={<AdminExperiences />} />
-          <Route path="companies" element={<AdminCompanies />} />
+        <Route element={<AdminRoute />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="experiences" element={<AdminExperiences />} />
+            <Route path="companies" element={<AdminCompanies />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

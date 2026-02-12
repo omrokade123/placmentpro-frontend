@@ -17,9 +17,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import CompanyDropdown from "./CompanyDropdown";
+import CompanyDropdown from "../CompanyDropdown";
 import { useState } from "react";
-import { createExperience } from "../api/experience";
+import { createExperience } from "../../api/adminexperience";
 import toast from "react-hot-toast";
 import {
   Building2,

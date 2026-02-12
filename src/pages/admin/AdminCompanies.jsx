@@ -2,204 +2,222 @@ import { useEffect, useState } from "react";
 import API from "@/api/axios";
 
 import {
- Table,
- TableBody,
- TableCell,
- TableHead,
- TableHeader,
- TableRow
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
-import { User } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+
+import { toast } from "sonner";
+
+import CreateCompanyDialog from "@/components/admin/CreateCompanyDialog.jsx";
+import EditCompanyDialog from "@/components/admin/EditCompanyDialog";
 
 export default function AdminCompanies() {
+  const [companies, setCompanies] = useState([]);
+  const [status, setStatus] = useState("pending");
+  const [search, setSearch] = useState("");
 
- const [companies, setCompanies] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState(1);
 
- const loadCompanies = async () => {
+  const [loading, setLoading] = useState(false);
 
-   const res =
-     await API.get("/admin/companies/pending");
+  //------------------------------------------------
 
-   setCompanies(res.data);
+  const loadCompanies = async () => {
+    try {
+      setLoading(true);
 
- };
+      const res = await API.get(
+        `/admin/companies?status=${status}&search=${search}&page=${page}&limit=10`,
+      );
 
- useEffect(() => {
-   loadCompanies();
- }, []);
+      setCompanies(res.data.data);
+      setPages(res.data.pages);
+    } catch {
+      toast.error("Failed to load companies");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  //------------------------------------------------
 
- const approve = async (id) => {
+  useEffect(() => {
+    setPage(1); // reset page on filter
+  }, [status, search]);
 
-   await API.put(
-     `/admin/companies/${id}/approve`
-   );
+  useEffect(() => {
+    loadCompanies();
+  }, [status, search, page]);
 
-   loadCompanies();
- };
+  //------------------------------------------------
 
- const reject = async (id) => {
+  const approve = async (id) => {
+    try {
+      await API.put(`/admin/companies/${id}/approve`);
+      toast.success("Company approved");
+      loadCompanies();
+    } catch {
+      toast.error("Approval failed");
+    }
+  };
 
-   await API.put(
-     `/admin/companies/${id}/reject`
-   );
+  //------------------------------------------------
 
-   loadCompanies();
- };
+  const reject = async (id) => {
+    const confirmReject = confirm("Reject this company?");
 
+    if (!confirmReject) return;
 
- return (
+    try {
+      await API.put(`/admin/companies/${id}/reject`);
 
-   <div className="space-y-6">
+      toast.success("Company rejected");
 
-     {/* HEADER */}
-     <div>
-       <h1 className="text-3xl font-bold">
-         Company Approvals
-       </h1>
+      loadCompanies();
+    } catch {
+      toast.error("Reject failed");
+    }
+  };
 
-       <p className="text-muted-foreground">
-         Validate companies added by users
-       </p>
-     </div>
+  //------------------------------------------------
 
+  const deleteCompany = async (id) => {
+    const confirmDelete = confirm("Delete this company?");
 
-     {/* TABLE */}
-     <div className="
-       bg-white
-       rounded-2xl
-       shadow-sm
-       border
-     ">
+    if (!confirmDelete) return;
 
-       <Table>
+    try {
+      await API.delete(`/admin/companies/${id}`);
 
-         <TableHeader>
+      toast.success("Deleted successfully");
 
-           <TableRow>
-             <TableHead>Company</TableHead>
-             <TableHead>Added By</TableHead>
-             <TableHead>Type</TableHead>
-             <TableHead>Status</TableHead>
-             <TableHead className="text-right">
-               Actions
-             </TableHead>
-           </TableRow>
+      loadCompanies();
+    } catch {
+      toast.error("Delete failed");
+    }
+  };
 
-         </TableHeader>
+  //------------------------------------------------
 
+  return (
+    <div className="space-y-6">
+      {/* HEADER */}
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold">Company Registry</h1>
 
-         <TableBody>
+        <CreateCompanyDialog onCreated={loadCompanies} />
+      </div>
 
-           {companies.map(company => (
+      {/* FILTER BAR */}
+      <div className="flex gap-3">
+        <Input
+          placeholder="Search company..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="max-w-sm"
+        />
 
-             <TableRow
-               key={company._id}
-               className="hover:bg-gray-50"
-             >
+        {["pending", "approved", "rejected"].map((s) => (
+          <Button
+            key={s}
+            variant={status === s ? "default" : "outline"}
+            onClick={() => setStatus(s)}
+          >
+            {s}
+          </Button>
+        ))}
+      </div>
 
-               <TableCell className="font-medium">
-                 {company.name}
-               </TableCell>
+      {/* TABLE */}
+      <div className="rounded-2xl border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Difficulty</TableHead>
+              <TableHead>User Added</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
 
-               <TableCell>
-                 {company.createdBy?.name || "System"}
-               </TableCell>
+          <TableBody>
+            {companies.map((company) => (
+              <TableRow key={company._id}>
+                <TableCell>{company.name}</TableCell>
 
-               <TableCell>
+                <TableCell>{company.difficultyLevel || "—"}</TableCell>
 
-                 {company.isUserAdded ? (
+                <TableCell>{company.isUserAdded ? "Yes" : "Admin"}</TableCell>
 
-                   <Badge className="
-                    bg-blue-100 text-blue-700 flex gap-1
-                   ">
-                    <User size={14}/>
-                     User Added
-                   </Badge>
+                <TableCell>
+                  <Badge>{company.status}</Badge>
+                </TableCell>
 
-                 ) : (
+                <TableCell>
+                  <div className="flex gap-2">
+                    <Button size="sm" onClick={() => approve(company._id)}>
+                      Approve
+                    </Button>
 
-                   <Badge variant="secondary">
-                     Default
-                   </Badge>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={() => reject(company._id)}
+                    >
+                      Reject
+                    </Button>
+                    <EditCompanyDialog
+                      company={company}
+                      onUpdated={loadCompanies}
+                    />
 
-                 )}
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => deleteCompany(company._id)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
 
-               </TableCell>
+      {/* PAGINATION */}
+      <div className="flex justify-end gap-2">
+        <Button
+          variant="outline"
+          disabled={page === 1}
+          onClick={() => setPage((p) => p - 1)}
+        >
+          Prev
+        </Button>
 
+        <span className="px-3 py-1">
+          {page} / {pages}
+        </span>
 
-               <TableCell>
-
-                 <Badge className="
-                   bg-yellow-100
-                   text-yellow-700
-                 ">
-                   Pending
-                 </Badge>
-
-               </TableCell>
-
-
-               <TableCell className="text-right space-x-2">
-
-                 <Button
-                   size="sm"
-                   className="
-                     bg-green-600
-                     hover:bg-green-700
-                   "
-                   onClick={() =>
-                     approve(company._id)
-                   }
-                 >
-                   Approve
-                 </Button>
-
-                 <Button
-                   size="sm"
-                   variant="destructive"
-                   onClick={() =>
-                     reject(company._id)
-                   }
-                 >
-                   Reject
-                 </Button>
-
-               </TableCell>
-
-             </TableRow>
-
-           ))}
-
-
-           {/* EMPTY STATE */}
-           {companies.length === 0 && (
-
-             <TableRow>
-               <TableCell
-                 colSpan={5}
-                 className="
-                   text-center
-                   py-12
-                   text-gray-400
-                 "
-               >
-                 No companies awaiting approval 🎉
-               </TableCell>
-             </TableRow>
-
-           )}
-
-         </TableBody>
-
-       </Table>
-
-     </div>
-
-   </div>
-
- );
+        <Button
+          variant="outline"
+          disabled={page === pages}
+          onClick={() => setPage((p) => p + 1)}
+        >
+          Next
+        </Button>
+      </div>
+    </div>
+  );
 }

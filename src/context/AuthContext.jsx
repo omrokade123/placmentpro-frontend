@@ -1,32 +1,19 @@
-import {
- createContext,
- useContext,
- useState
-} from "react";
+import { createContext, useContext, useState } from "react";
 
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
-  const [token, setToken] = useState(
-    localStorage.getItem("token")
-  );
-
-  const [user, setUser] = useState(
-    JSON.parse(localStorage.getItem("user"))
-  );
-
-  const [loading] = useState(false); 
-  // no hydration call needed
+  const [user, setUser] = useState(() => {
+    const stored = localStorage.getItem("user");
+    return stored ? JSON.parse(stored) : null;
+  });
 
   /* LOGIN */
   const login = (token, userData) => {
-
     localStorage.setItem("token", token);
-    localStorage.setItem(
-      "user",
-      JSON.stringify(userData)
-    );
+    localStorage.setItem("user", JSON.stringify(userData));
 
     setToken(token);
     setUser(userData);
@@ -34,7 +21,6 @@ const AuthProvider = ({ children }) => {
 
   /* LOGOUT */
   const logout = () => {
-
     localStorage.removeItem("token");
     localStorage.removeItem("user");
 
@@ -47,9 +33,8 @@ const AuthProvider = ({ children }) => {
       value={{
         token,
         user,
-        loading,
         login,
-        logout
+        logout,
       }}
     >
       {children}
@@ -59,5 +44,4 @@ const AuthProvider = ({ children }) => {
 
 export default AuthProvider;
 
-export const useAuth = () =>
-  useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext);

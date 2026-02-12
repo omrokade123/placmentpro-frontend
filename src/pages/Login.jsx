@@ -39,12 +39,6 @@ export default function Login() {
     }
   };
 
-  useEffect(() => {
-    if (token) {
-      navigate("/dashboard");
-    }
-  }, [token]);
-
   return (
     <AuthLayout>
       <Card className="w-95 shadow-xl border-0">
