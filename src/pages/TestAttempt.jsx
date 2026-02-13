@@ -439,48 +439,48 @@ export default function TestAttempt() {
 
           {/* Options */}
           <div className="space-y-3">
-            {question.options.map((opt) => {
-              const selected = answers[question._id] === opt._id;
-              const optionLabel = String.fromCharCode(65 + i);
+            {question.options.map((opt, index) => {
+              const selected = answers[question._id] === opt.text;
+              const optionLabel = String.fromCharCode(65 + index); // A, B, C, D
 
               return (
                 <button
-                  key={opt._id}
+                  key={opt._id || index}
                   onClick={() => handleAnswer(opt.text)}
                   className={`
-                    w-full text-left
-                    p-4 rounded-xl border-2
-                    transition-all duration-200
-                    flex items-start gap-3
+          w-full text-left
+          p-4 rounded-xl border-2
+          transition-all duration-200
+          flex items-start gap-3
 
-                    ${
-                      selected
-                        ? "border-purple-500 dark:border-purple-600 bg-purple-50 dark:bg-purple-950/30 shadow-md"
-                        : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
-                    }
-                  `}
+          ${
+            selected
+              ? "border-purple-500 dark:border-purple-600 bg-purple-50 dark:bg-purple-950/30 shadow-md"
+              : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
+          }
+        `}
                 >
                   <span
                     className={`
-                      w-7 h-7 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0
-                      ${
-                        selected
-                          ? "bg-purple-600 text-white"
-                          : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
-                      }
-                    `}
+            w-7 h-7 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0
+            ${
+              selected
+                ? "bg-purple-600 text-white"
+                : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+            }
+          `}
                   >
                     {optionLabel}
                   </span>
                   <span
                     className={`
-                      flex-1 pt-0.5 font-medium
-                      ${
-                        selected
-                          ? "text-purple-900 dark:text-purple-200"
-                          : "text-gray-700 dark:text-gray-300"
-                      }
-                    `}
+            flex-1 pt-0.5 font-medium
+            ${
+              selected
+                ? "text-purple-900 dark:text-purple-200"
+                : "text-gray-700 dark:text-gray-300"
+            }
+          `}
                   >
                     {opt.text}
                   </span>

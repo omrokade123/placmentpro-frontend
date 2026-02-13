@@ -181,9 +181,9 @@ export default function TestResult() {
                     </h3>
                   </div>
                   <div className="flex gap-2 flex-wrap">
-                    {result.strongTopics.map((topic) => (
+                    {result.strongTopics.map((topic, idx) => (
                       <Badge
-                        key={topic}
+                        key={idx}
                         className="bg-green-200 text-green-800 dark:bg-green-900/50 dark:text-green-300 border-green-300 dark:border-green-700"
                       >
                         {topic}
@@ -206,9 +206,9 @@ export default function TestResult() {
                     </h3>
                   </div>
                   <div className="flex gap-2 flex-wrap">
-                    {result.weakTopics.map((topic) => (
+                    {result.weakTopics.map((topic, idx) => (
                       <Badge
-                        key={topic}
+                        key={idx}
                         className="bg-red-200 text-red-800 dark:bg-red-900/50 dark:text-red-300 border-red-300 dark:border-red-700"
                       >
                         {topic}
@@ -348,15 +348,31 @@ export default function TestResult() {
                   })}
                 </div>
 
-                {/* Explanation if needed */}
+                {/* Summary for incorrect answers - ADDED */}
                 {!item.isCorrect && (
-                  <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800">
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      <span className="font-semibold text-green-600 dark:text-green-400">
-                        Correct answer:
-                      </span>{" "}
-                      {item.correctAnswer}
-                    </p>
+                  <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800 space-y-2">
+                    <div className="flex items-start gap-2">
+                      <XCircle size={16} className="text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
+                      <p className="text-sm">
+                        <span className="font-semibold text-red-600 dark:text-red-400">
+                          Your answer:
+                        </span>{" "}
+                        <span className="text-gray-700 dark:text-gray-300">
+                          {item.selectedAnswer || "Not answered"}
+                        </span>
+                      </p>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <CheckCircle2 size={16} className="text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
+                      <p className="text-sm">
+                        <span className="font-semibold text-green-600 dark:text-green-400">
+                          Correct answer:
+                        </span>{" "}
+                        <span className="text-gray-700 dark:text-gray-300">
+                          {item.correctAnswer}
+                        </span>
+                      </p>
+                    </div>
                   </div>
                 )}
               </CardContent>
