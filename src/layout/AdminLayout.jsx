@@ -75,7 +75,13 @@ export default function AdminLayout() {
           <Building2 size={20}/>
           Companies
         </NavLink>
-
+        <NavLink
+          to="/admin/questions"
+          className={navStyle}
+        >
+          <Building2 size={20}/>
+          questions
+        </NavLink>
       </nav>
 
     </div>

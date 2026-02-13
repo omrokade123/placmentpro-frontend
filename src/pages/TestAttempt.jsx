@@ -197,7 +197,7 @@
 //               disabled={hasSubmitted.current}
 //               onClick={() =>
 //                 current === questions.length - 1
-//                   ? handleSubmit() 
+//                   ? handleSubmit()
 //                   : setCurrent((prev) => prev + 1)
 //               }
 //               className="
@@ -277,7 +277,6 @@
 //   );
 // }
 
-
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import API from "../api/axios";
@@ -309,7 +308,7 @@ export default function TestAttempt() {
     try {
       const res = await API.post(`/practice/submit/${id}`, { answers });
       toast.success("Test submitted successfully! 🎉");
-      navigate(`/practice/result/${id}`, {
+      navigate(`/practice/result/${res.data.attemptId}`, {
         state: res.data,
       });
     } catch (err) {
@@ -375,10 +374,10 @@ export default function TestAttempt() {
 
   const question = questions[current];
 
-  const handleAnswer = (option) => {
+  const handleAnswer = (optionText) => {
     setAnswers((prev) => ({
       ...prev,
-      [question._id]: option,
+      [question._id]: optionText,
     }));
   };
 
@@ -427,7 +426,9 @@ export default function TestAttempt() {
               `}
             >
               <Clock size={18} />
-              <span className="text-lg tabular-nums">{formatTime(timeLeft)}</span>
+              <span className="text-lg tabular-nums">
+                {formatTime(timeLeft)}
+              </span>
             </div>
           </div>
 
@@ -438,14 +439,14 @@ export default function TestAttempt() {
 
           {/* Options */}
           <div className="space-y-3">
-            {question.options.map((opt, i) => {
-              const selected = answers[question._id] === opt;
+            {question.options.map((opt) => {
+              const selected = answers[question._id] === opt._id;
               const optionLabel = String.fromCharCode(65 + i);
 
               return (
                 <button
-                  key={i}
-                  onClick={() => handleAnswer(opt)}
+                  key={opt._id}
+                  onClick={() => handleAnswer(opt.text)}
                   className={`
                     w-full text-left
                     p-4 rounded-xl border-2
@@ -481,7 +482,7 @@ export default function TestAttempt() {
                       }
                     `}
                   >
-                    {opt}
+                    {opt.text}
                   </span>
                   {selected && (
                     <CheckCircle2
@@ -584,7 +585,9 @@ export default function TestAttempt() {
 
           <div className="flex items-center gap-2.5">
             <div className="w-5 h-5 bg-gray-200 dark:bg-gray-700 rounded-md"></div>
-            <span className="text-gray-700 dark:text-gray-300">Not Answered</span>
+            <span className="text-gray-700 dark:text-gray-300">
+              Not Answered
+            </span>
           </div>
         </div>
       </div>
