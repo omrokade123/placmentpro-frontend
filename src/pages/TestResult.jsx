@@ -113,7 +113,7 @@ export default function TestResult() {
         {/* SCORE CARD */}
         <Card className="rounded-2xl border-2 border-gray-200 dark:border-gray-800 shadow-lg overflow-hidden">
           {/* Score Header with Gradient */}
-          <div className="bg-gradient-to-r from-purple-500 to-indigo-600 p-8 text-white text-center">
+          <div className="bg-linear-to-r from-purple-500 to-indigo-600 p-8 text-white text-center">
             <div className="flex items-center justify-center gap-3 mb-4">
               <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
                 <Brain size={32} />
@@ -170,7 +170,7 @@ export default function TestResult() {
             <div className="grid md:grid-cols-2 gap-4 mb-6">
               {/* Strong Topics */}
               {result.strongTopics?.length > 0 && (
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border border-green-200 dark:border-green-800 rounded-xl p-4">
+                <div className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 border border-green-200 dark:border-green-800 rounded-xl p-4">
                   <div className="flex items-center gap-2 mb-3">
                     <TrendingUp
                       size={18}
@@ -195,7 +195,7 @@ export default function TestResult() {
 
               {/* Weak Topics */}
               {result.weakTopics?.length > 0 && (
-                <div className="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-950/30 dark:to-orange-950/30 border border-red-200 dark:border-red-800 rounded-xl p-4">
+                <div className="bg-linear-to-br from-red-50 to-orange-50 dark:from-red-950/30 dark:to-orange-950/30 border border-red-200 dark:border-red-800 rounded-xl p-4">
                   <div className="flex items-center gap-2 mb-3">
                     <TrendingDown
                       size={18}
@@ -231,7 +231,7 @@ export default function TestResult() {
               </Button>
               <Button
                 onClick={() => navigate("/dashboard")}
-                className="flex-1 h-12 font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700"
+                className="flex-1 h-12 font-semibold bg-linear-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700"
               >
                 <Home size={18} className="mr-2" />
                 Back to Dashboard
@@ -304,7 +304,7 @@ export default function TestResult() {
                           <div className="flex items-center gap-3 flex-1">
                             <span
                               className={`
-                                w-7 h-7 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0
+                                w-7 h-7 rounded-lg flex items-center justify-center text-sm font-bold shrink-0
                                 ${
                                   isCorrect
                                     ? "bg-green-600 text-white"
@@ -352,7 +352,7 @@ export default function TestResult() {
                 {!item.isCorrect && (
                   <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800 space-y-2">
                     <div className="flex items-start gap-2">
-                      <XCircle size={16} className="text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
+                      <XCircle size={16} className="text-red-600 dark:text-red-400 mt-0.5 shrink-0" />
                       <p className="text-sm">
                         <span className="font-semibold text-red-600 dark:text-red-400">
                           Your answer:
@@ -363,7 +363,7 @@ export default function TestResult() {
                       </p>
                     </div>
                     <div className="flex items-start gap-2">
-                      <CheckCircle2 size={16} className="text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
+                      <CheckCircle2 size={16} className="text-green-600 dark:text-green-400 mt-0.5 shrink-0" />
                       <p className="text-sm">
                         <span className="font-semibold text-green-600 dark:text-green-400">
                           Correct answer:
