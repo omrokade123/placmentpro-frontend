@@ -25,6 +25,7 @@ export default function Dashboard() {
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
@@ -137,7 +138,7 @@ export default function Dashboard() {
             </div>
             <Button
               onClick={() => navigate("/practice")}
-              className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 h-11 px-6 font-semibold"
+              className="bg-linear-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 h-11 px-6 font-semibold"
             >
               Practice Now
               <ArrowRight size={18} className="ml-2" />
@@ -150,7 +151,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* TOTAL TESTS */}
         <Card className="rounded-2xl border-2 border-gray-200 dark:border-gray-800 hover:shadow-lg transition-shadow duration-200 overflow-hidden">
-          <div className="h-2 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
+          <div className="h-2 bg-linear-to-r from-blue-500 to-cyan-500"></div>
           <CardContent className="p-6">
             <div className="flex items-start justify-between mb-4">
               <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
@@ -195,7 +196,7 @@ export default function Dashboard() {
 
         {/* WEAK TOPICS */}
         <Card className="rounded-2xl border-2 border-gray-200 dark:border-gray-800 hover:shadow-lg transition-shadow duration-200 overflow-hidden">
-          <div className="h-2 bg-gradient-to-r from-orange-500 to-red-500"></div>
+          <div className="h-2 bg-linear-to-r from-orange-500 to-red-500"></div>
           <CardContent className="p-6">
             <div className="flex items-start justify-between mb-4">
               <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center">
@@ -249,7 +250,7 @@ export default function Dashboard() {
       </div>
 
       {/* CHART */}
-      <AnalyticsChart data={analytics?.trendData} />
+      <AnalyticsChart data={analytics?.trendData } />
 
       {/* TOPICS SECTION */}
       <div className="grid md:grid-cols-2 gap-6">
