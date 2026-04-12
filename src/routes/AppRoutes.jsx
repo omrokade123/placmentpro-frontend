@@ -19,6 +19,8 @@ import MyExperiences from "@/pages/MyExperiences";
 import { Toaster } from "react-hot-toast";
 import AdminQuestions from "@/pages/admin/AdminQuestions";
 import EditQuestionPage from "@/pages/admin/EditQuestionPage";
+import Home from "@/pages/Interview/pages/Home";
+import Interviewlr from "@/pages/Interview/pages/InterView";
 
 const AppRoutes = () => {
   return (
@@ -88,7 +90,26 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
-
+        <Route
+          path="/interview"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Home/>
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/interview/:interviewId"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Interviewlr/>
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
         <Route element={<AdminRoute />}>
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />

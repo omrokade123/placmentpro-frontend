@@ -16,6 +16,7 @@ import {
   Award,
   Brain,
   AlertCircle,
+  Clock,
 } from "lucide-react";
 
 export default function TestResult() {
@@ -56,7 +57,7 @@ export default function TestResult() {
 
   const accuracy = result?.accuracy ? result.accuracy.toFixed(1) : "0";
   const correctAnswers = result.score;
-  const totalQuestions = result.review.length;
+  const totalQuestions = result.totalQuestions;
   const incorrectAnswers = totalQuestions - correctAnswers;
 
   // Performance level
@@ -281,8 +282,10 @@ export default function TestResult() {
                 {/* Options */}
                 <div className="space-y-2">
                   {item.options.map((opt, i) => {
-                    const isUser = opt === item.selectedAnswer;
-                    const isCorrect = opt === item.correctAnswer;
+                    const optionText = String(opt).trim();
+                    const selectedAnswerText = item.selectedAnswer ? String(item.selectedAnswer).trim() : null;
+                    const isUser = optionText === selectedAnswerText;
+                    const isCorrect = optionText === (item.correctAnswer ? String(item.correctAnswer).trim() : "");
                     const optionLabel = String.fromCharCode(65 + i);
 
                     let className = "p-4 rounded-lg border-2 transition-all ";
@@ -325,7 +328,7 @@ export default function TestResult() {
                                     : "text-gray-700 dark:text-gray-300"
                               }`}
                             >
-                              {opt}
+                              {optionText}
                             </span>
                           </div>
 
@@ -348,28 +351,49 @@ export default function TestResult() {
                   })}
                 </div>
 
-                {/* Summary for incorrect answers - ADDED */}
                 {!item.isCorrect && (
                   <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800 space-y-2">
+                    {/* User answer */}
                     <div className="flex items-start gap-2">
-                      <XCircle size={16} className="text-red-600 dark:text-red-400 mt-0.5 shrink-0" />
+                      {item.selectedAnswer && String(item.selectedAnswer).trim() !== "" ? (
+                        <XCircle
+                          size={16}
+                          className="text-red-600 dark:text-red-400 mt-0.5 shrink-0"
+                        />
+                      ) : (
+                        <Clock
+                          size={16}
+                          className="text-yellow-600 dark:text-yellow-400 mt-0.5 shrink-0"
+                        />
+                      )}
+
                       <p className="text-sm">
                         <span className="font-semibold text-red-600 dark:text-red-400">
                           Your answer:
                         </span>{" "}
                         <span className="text-gray-700 dark:text-gray-300">
-                          {item.selectedAnswer || "Not answered"}
+                          {item.selectedAnswer && String(item.selectedAnswer).trim() !== ""
+                            ? String(item.selectedAnswer).trim()
+                            : "Not answered"}
                         </span>
                       </p>
                     </div>
+
+                    {/* Correct answer */}
                     <div className="flex items-start gap-2">
-                      <CheckCircle2 size={16} className="text-green-600 dark:text-green-400 mt-0.5 shrink-0" />
+                      <CheckCircle2
+                        size={16}
+                        className="text-green-600 dark:text-green-400 mt-0.5 shrink-0"
+                      />
+
                       <p className="text-sm">
                         <span className="font-semibold text-green-600 dark:text-green-400">
                           Correct answer:
                         </span>{" "}
                         <span className="text-gray-700 dark:text-gray-300">
-                          {item.correctAnswer}
+                          {item.correctAnswer && String(item.correctAnswer).trim() !== ""
+                            ? String(item.correctAnswer).trim()
+                            : "N/A"}
                         </span>
                       </p>
                     </div>

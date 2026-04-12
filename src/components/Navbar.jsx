@@ -14,6 +14,7 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import API from "@/api/axios";
 
 export default function Navbar() {
   const location = useLocation();
@@ -39,9 +40,12 @@ export default function Navbar() {
 
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
+  const handleLogout = async () => {
+    const res = await API.post("/auth/logout");
+    if (res) {
+      logout();
+      navigate("/login");
+    }
   };
 
   return (

@@ -1,282 +1,3 @@
-// import { useParams } from "react-router-dom";
-// import { useEffect, useState, useRef } from "react";
-// import API from "../api/axios";
-// import { useNavigate } from "react-router-dom";
-// import toast from "react-hot-toast";
-
-// export default function TestAttempt() {
-//   const navigate = useNavigate();
-//   const { id } = useParams();
-//   const hasSubmitted = useRef(false);
-
-//   const [questions, setQuestions] = useState([]);
-//   const [current, setCurrent] = useState(0);
-//   const [answers, setAnswers] = useState({});
-//   const [timeLeft, setTimeLeft] = useState(0);
-
-//   const timerRef = useRef(null);
-//   const expiryRef = useRef(null);
-
-//   const handleSubmit = async () => {
-//     if (hasSubmitted.current) return;
-
-//     hasSubmitted.current = true;
-
-//     clearInterval(timerRef.current);
-
-//     try {
-//       const res = await API.post(`/practice/submit/${id}`, { answers });
-//       toast.success("Test submtted successfully");
-//       navigate(`/practice/result/${id}`, {
-//         state: res.data,
-//       });
-//     } catch (err) {
-//       if (err.response?.status === 400) {
-//         navigate(`/practice/result/${id}`);
-//         toast.error(err);
-//       } else {
-//         console.log("Submission failed:", err.response?.data);
-//       }
-//     }
-//   };
-
-//   useEffect(() => {
-//     const fetchTest = async () => {
-//       try {
-//         const res = await API.get(`/practice/test/${id}`);
-
-//         setQuestions(res.data.questions);
-
-//         const start = new Date(res.data.startTime).getTime();
-//         const duration = res.data.duration * 1000;
-
-//         expiryRef.current = start + duration;
-
-//         // const remaining = Math.floor((start + duration - Date.now()) / 1000);
-
-//         // const safeRemaining = remaining > 0 ? remaining : 0;
-
-//         // setTimeLeft(safeRemaining);
-
-//         timerRef.current = setInterval(() => {
-//           const remaining = Math.floor((expiryRef.current - Date.now()) / 1000);
-
-//           if (remaining <= 0) {
-//             if (!hasSubmitted.current) {
-//               hasSubmitted.current = true;
-
-//               clearInterval(timerRef.current);
-
-//               handleSubmit();
-//             }
-
-//             setTimeLeft(0);
-//             return;
-//           }
-
-//           setTimeLeft(remaining);
-//         }, 1000);
-//       } catch {
-//         console.log("Failed to load test");
-//       }
-//     };
-
-//     fetchTest();
-
-//     return () => clearInterval(timerRef.current);
-//   }, [id]);
-
-//   if (!questions.length) {
-//     return (
-//       <div className="min-h-screen flex justify-center items-center">
-//         Loading Test...
-//       </div>
-//     );
-//   }
-
-//   const question = questions[current];
-
-//   const handleAnswer = (option) => {
-//     setAnswers((prev) => ({
-//       ...prev,
-//       [question._id]: option,
-//     }));
-//   };
-
-//   const formatTime = (seconds) => {
-//     if (seconds <= 0) return "00:00";
-
-//     const mins = Math.floor(seconds / 60);
-//     const secs = seconds % 60;
-
-//     return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
-//   };
-
-//   return (
-//     <div
-//       className="
-//       min-h-screen
-//       bg-gray-50 dark:bg-gray-950
-//       p-8
-//       grid grid-cols-4 gap-8
-//       "
-//     >
-//       {/* ✅ QUESTION AREA */}
-//       <div className="col-span-3">
-//         <div
-//           className="
-//           bg-white dark:bg-gray-900
-//           p-8
-//           rounded-2xl
-//           shadow-sm
-//           "
-//         >
-//           {/* Question Count */}
-//           <div className="flex justify-between items-center mb-4">
-//             <p className="text-gray-500">
-//               Question {current + 1} of {questions.length}
-//             </p>
-
-//             <div
-//               className={`font-semibold text-lg ${timeLeft < 60 ? "text-red-600" : "text-gray-700 dark:text-gray-300"}`}
-//             >
-//               ⏳ {formatTime(timeLeft)}
-//             </div>
-//           </div>
-
-//           {/* Question */}
-//           <h2 className="text-xl font-semibold mb-6">
-//             {question.questionText}
-//           </h2>
-
-//           {/* Options */}
-//           <div className="space-y-3">
-//             {question.options.map((opt, i) => {
-//               const selected = answers[question._id] === opt;
-
-//               return (
-//                 <button
-//                   key={i}
-//                   onClick={() => handleAnswer(opt)}
-//                   className={`
-//                     w-full text-left
-//                     p-4 rounded-xl border
-//                     transition
-
-//                     hover:bg-gray-100
-//                     dark:hover:bg-gray-800
-
-//                     ${
-//                       selected
-//                         ? "border-black dark:border-white"
-//                         : "border-gray-200 dark:border-gray-700"
-//                     }
-//                   `}
-//                 >
-//                   {opt}
-//                 </button>
-//               );
-//             })}
-//           </div>
-
-//           {/* Navigation */}
-//           <div className="flex justify-between mt-8">
-//             <button
-//               disabled={current === 0}
-//               onClick={() => setCurrent((prev) => prev - 1)}
-//               className="
-//               px-4 py-2 rounded-lg
-//               bg-gray-200 dark:bg-gray-700
-//               disabled:opacity-50
-//               "
-//             >
-//               Previous
-//             </button>
-
-//             <button
-//               disabled={hasSubmitted.current}
-//               onClick={() =>
-//                 current === questions.length - 1
-//                   ? handleSubmit()
-//                   : setCurrent((prev) => prev + 1)
-//               }
-//               className="
-//               px-6 py-2 rounded-lg
-//               bg-black text-white
-//               hover:scale-105 transition
-//               "
-//             >
-//               {current === questions.length - 1 ? "Submit Test" : "Next"}
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* ✅ QUESTION PALETTE */}
-//       <div
-//         className="
-//         bg-white dark:bg-gray-900
-//         p-6
-//         rounded-2xl
-//         shadow-sm
-//         h-fit
-//         sticky top-8
-//         "
-//       >
-//         <h3 className="font-semibold mb-4">Questions</h3>
-
-//         <div className="grid grid-cols-5 gap-3">
-//           {questions.map((q, index) => {
-//             const isAnswered = answers[q._id];
-//             const isCurrent = index === current;
-
-//             return (
-//               <button
-//                 key={q._id}
-//                 onClick={() => setCurrent(index)}
-//                 className={`
-//                   w-10 h-10
-//                   rounded-lg
-//                   text-sm font-medium
-//                   transition
-
-//                   ${
-//                     isCurrent
-//                       ? "bg-black text-white"
-//                       : isAnswered
-//                         ? "bg-green-500 text-white"
-//                         : "bg-gray-200 dark:bg-gray-700"
-//                   }
-//                 `}
-//               >
-//                 {index + 1}
-//               </button>
-//             );
-//           })}
-//         </div>
-
-//         {/* Legend */}
-//         <div className="mt-6 space-y-2 text-sm">
-//           <div className="flex items-center gap-2">
-//             <div className="w-4 h-4 bg-black rounded"></div>
-//             Current
-//           </div>
-
-//           <div className="flex items-center gap-2">
-//             <div className="w-4 h-4 bg-green-500 rounded"></div>
-//             Answered
-//           </div>
-
-//           <div className="flex items-center gap-2">
-//             <div className="w-4 h-4 bg-gray-300 dark:bg-gray-700 rounded"></div>
-//             Not Answered
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import API from "../api/axios";
@@ -304,9 +25,22 @@ export default function TestAttempt() {
     hasSubmitted.current = true;
 
     clearInterval(timerRef.current);
-
     try {
-      const res = await API.post(`/practice/submit/${id}`, { answers });
+      // Convert all answer keys to strings to ensure proper backend matching
+      const answersToSubmit = {};
+      Object.entries(answers).forEach(([questionId, answer]) => {
+        answersToSubmit[String(questionId)] = answer;
+      });
+
+      console.log("=== FRONTEND SUBMIT ===");
+      console.log("Answers object before submit:", answers);
+      console.log("Answers to submit (stringified keys):", answersToSubmit);
+      console.log("Answer entries:", Object.entries(answersToSubmit).map(([k, v]) => ({
+        key: k,
+        value: v
+      })));
+
+      const res = await API.post(`/practice/submit/${id}`, { answers: answersToSubmit });
       toast.success("Test submitted successfully! 🎉");
       navigate(`/practice/result/${res.data.attemptId}`, {
         state: res.data,
@@ -377,7 +111,7 @@ export default function TestAttempt() {
   const handleAnswer = (optionText) => {
     setAnswers((prev) => ({
       ...prev,
-      [question._id]: optionText,
+      [question._id]: optionText.trim(),
     }));
   };
 
@@ -543,7 +277,7 @@ export default function TestAttempt() {
 
         <div className="grid grid-cols-5 gap-2.5">
           {questions.map((q, index) => {
-            const isAnswered = answers[q._id];
+            const isAnswered = answers[q._id] !== undefined;
             const isCurrent = index === current;
 
             return (

@@ -9,6 +9,7 @@ import {
   Shield,
   Menu,
   X,
+  Briefcase
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { NavLink } from "react-router-dom";
@@ -57,6 +58,11 @@ export default function Sidebar() {
       icon: <FileText size={20} />,
       label: "My Experiences",
     },
+    {
+      to: "/interview",
+      icon: <Briefcase size={20} />,
+      label: "Interview",
+    }
   ];
 
   // Add admin page if user is admin
