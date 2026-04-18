@@ -6,6 +6,7 @@ import {
   startInterview,
   submitInterviewAnswer,
   getInterviewSession,
+  getTextFromSpeech
 
 } from "../services/interview.api";
 
@@ -158,6 +159,15 @@ export const useInterview = () => {
 
   };
 
+  const getSpeechToText = async (FormData) => {
+    try{
+      const response = await getTextFromSpeech(FormData);
+      return response;
+    }catch(err){
+      console.error("Error while converting speech to text",err);
+    }
+  }
+
   return {
     loading,
     report,
@@ -168,6 +178,7 @@ export const useInterview = () => {
     scheduleMockInterview,
     startMockInterview,
     submitAnswer,
-    checkInterviewSession
+    checkInterviewSession,
+    getSpeechToText
   };
 };

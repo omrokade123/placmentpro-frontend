@@ -108,12 +108,25 @@ export const submitInterviewAnswer = async (interviewId, answer) => {
  */
 export const getInterviewSession = async (reportId) => {
 
-  const response = await api.get(`/interview/session/${reportId}`);
+    const response = await api.get(`/interview/session/${reportId}`);
 
-  return response.data;
+    return response.data;
 
 };
 
+
+
+export const getTextFromSpeech = async (formData) => {
+    const res = await api.post('/interview/speech-to-text', formData,
+        {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        }
+    );
+
+    return res.data;
+}
 
 /**
  * @description Get AI feedback for completed interview

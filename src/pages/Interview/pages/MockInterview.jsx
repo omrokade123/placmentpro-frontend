@@ -9,15 +9,17 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 
 import { ArrowLeft, Brain, MessageSquare, CheckCircle } from "lucide-react";
+import axios from "axios";
 
 const MockInterview = () => {
   const { interviewId } = useParams();
   const navigate = useNavigate();
 
-  const { startMockInterview, submitAnswer, loading } = useInterview();
+  const { startMockInterview, submitAnswer, loading, getSpeechToText } = useInterview();
 
-  const recognitionRef = useRef(null);
-  const [isListening, setIsListening] = useState(false);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
+  const [isRecording, setIsRecording] = useState(false);
 
   const [question, setQuestion] = useState(null);
   const [answer, setAnswer] = useState("");
@@ -25,7 +27,6 @@ const MockInterview = () => {
 
   const [questionNumber, setQuestionNumber] = useState(1);
   const [totalQuestions, setTotalQuestions] = useState(0);
-  const [speechEnabled, setSpeechEnabled] = useState(false);
 
   const speakQuestion = (text) => {
     if (!window.speechSynthesis) {
@@ -40,10 +41,51 @@ const MockInterview = () => {
     utterance.pitch = 1;
     utterance.volume = 1;
 
-    window.speechSynthesis.cancel(); 
+    window.speechSynthesis.cancel();
     window.speechSynthesis.speak(utterance);
   };
 
+  const startRecording = async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+    const recorder = new MediaRecorder(stream);
+
+    mediaRecorderRef.current = recorder;
+    audioChunksRef.current = [];
+
+    recorder.ondataavailable = (event) => {
+      if (event.data.size > 0) {
+        audioChunksRef.current.push(event.data);
+      }
+    };
+
+    recorder.start();
+    setIsRecording(true);
+  };
+
+  const stopRecording = async () => {
+    const recorder = mediaRecorderRef.current;
+
+    recorder.stop();
+
+    recorder.onstop = async () => {
+      const audioBlob = new Blob(audioChunksRef.current, {
+        type: "audio/webm",
+      });
+
+      const formData = new FormData();
+      formData.append("audio", audioBlob);
+
+      const response = await getSpeechToText(formData);
+
+
+      if (response.text) {
+        setAnswer((prev) => prev + " " + response.text);
+      }
+    };
+
+    setIsRecording(false);
+  };
   useEffect(() => {
     const startInterview = async () => {
       const data = await startMockInterview(interviewId);
@@ -59,71 +101,6 @@ const MockInterview = () => {
 
     startInterview();
   }, [interviewId]);
-
-  useEffect(() => {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    if (!SpeechRecognition) {
-      console.warn("Speech recognition not supported");
-      return;
-    }
-
-    const recognition = new SpeechRecognition();
-
-    recognition.lang = "en-US";
-    recognition.continuous = true;
-    recognition.interimResults = true;
-
-    recognition.onresult = (event) => {
-      let transcript = "";
-
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        transcript += event.results[i][0].transcript;
-      }
-
-      setAnswer(transcript);
-    };
-
-    recognition.onend = () => {
-      // if user didn't manually stop, restart listening
-      if (isListening && recognitionRef.current) {
-        recognitionRef.current.start();
-      } else {
-        setIsListening(false);
-      }
-    };
-    recognition.onerror = (event) => {
-      console.error("Speech recognition error:", event.error);
-    };
-
-    recognitionRef.current = recognition;
-  }, []);
-
-  // useEffect(() => {
-  //   if (question?.question) {
-  //     speakQuestion(question.question);
-  //   }
-  // }, [question]);
-
-  const startListening = () => {
-    if (!recognitionRef.current) return;
-
-    setIsListening(true);
-
-    try {
-      recognitionRef.current.start();
-    } catch (err) {
-      console.warn("Recognition already started");
-    }
-  };
-
-  const stopListening = () => {
-    if (!recognitionRef.current) return;
-
-    setIsListening(false);
-    recognitionRef.current.stop();
-  };
 
   const handleSubmit = async () => {
     if (!answer.trim()) return;
@@ -228,7 +205,7 @@ const MockInterview = () => {
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
               />
-              {isListening && (
+              {isRecording && (
                 <div className="flex items-center gap-3 mt-3">
                   <div className="flex items-end gap-1 h-6">
                     <span className="w-1 bg-red-500 animate-[wave_1s_infinite]"></span>
@@ -239,23 +216,23 @@ const MockInterview = () => {
                   </div>
 
                   <p className="text-sm text-red-500 font-medium animate-pulse">
-                    Listening... Speak your answer
+                    Recording... Speak your answer
                   </p>
                 </div>
               )}
 
               <div className="flex justify-end gap-2">
-                {!isListening ? (
+                {!isRecording ? (
                   <Button
-                    onClick={startListening}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                    onClick={startRecording}
+                    className="bg-indigo-600 text-white"
                   >
-                    🎤 Start Voice Answer
+                    🎤 Start Recording
                   </Button>
                 ) : (
                   <Button
-                    onClick={stopListening}
-                    className="bg-red-600 hover:bg-red-700 text-white"
+                    onClick={stopRecording}
+                    className="bg-red-600 text-white"
                   >
                     ⏹ Stop Recording
                   </Button>
@@ -268,7 +245,7 @@ const MockInterview = () => {
                 </Button>
                 <Button
                   onClick={handleSubmit}
-                  disabled={loading || isListening}
+                  disabled={loading || isRecording}
                   className="bg-purple-600 hover:bg-purple-700"
                 >
                   {questionNumber === totalQuestions
