@@ -118,7 +118,7 @@ const Home = () => {
               value={jobDescription}
               onChange={(e) => setJobDescription(e.target.value)}
               placeholder="Paste job description here... Include role, responsibilities, and required skills."
-              className="min-h-48 border-2 border-gray-200 dark:border-gray-700 focus:border-purple-500 dark:focus:border-purple-400"
+              className="h-48 resize-none overflow-y-auto border-2 border-gray-200 dark:border-gray-700 focus:border-purple-500 dark:focus:border-purple-400"
             />
 
           </div>
