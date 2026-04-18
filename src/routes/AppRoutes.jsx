@@ -21,6 +21,9 @@ import AdminQuestions from "@/pages/admin/AdminQuestions";
 import EditQuestionPage from "@/pages/admin/EditQuestionPage";
 import Home from "@/pages/Interview/pages/Home";
 import Interviewlr from "@/pages/Interview/pages/InterView";
+import Profile from "@/pages/Profile";
+import MockInterview from "@/pages/Interview/pages/MockInterview";
+import InterviewFeedback from "@/pages/Interview/pages/InterviewFeedback";
 
 const AppRoutes = () => {
   return (
@@ -29,7 +32,13 @@ const AppRoutes = () => {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-
+        <Route path="/profile" element={
+          <ProtectedRoute>
+              <DashboardLayout>
+                <Profile />
+              </DashboardLayout>
+            </ProtectedRoute>
+        } />
         <Route
           path="/practice"
           element={
@@ -106,6 +115,26 @@ const AppRoutes = () => {
             <ProtectedRoute>
               <DashboardLayout>
                 <Interviewlr/>
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/interview/mock-interview/:interviewId"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <MockInterview/>
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/interview/interview-feedback/:interviewId"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <InterviewFeedback/>
               </DashboardLayout>
             </ProtectedRoute>
           }

@@ -39,6 +39,11 @@ export default function Sidebar() {
       label: "Dashboard",
     },
     {
+      to: "/interview",
+      icon: <Briefcase size={20} />,
+      label: "Mock-Interview",
+    },
+    {
       to: "/practice",
       icon: <Brain size={20} />,
       label: "Practice",
@@ -57,11 +62,6 @@ export default function Sidebar() {
       to: "/my-experiences",
       icon: <FileText size={20} />,
       label: "My Experiences",
-    },
-    {
-      to: "/interview",
-      icon: <Briefcase size={20} />,
-      label: "Interview",
     }
   ];
 

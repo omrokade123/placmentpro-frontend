@@ -32,7 +32,8 @@ export default function CreateQuestionDialog({ onCreated }) {
 
   const [form, setForm] = useState({
     questionText: "",
-    topic: "",
+    topic: "aptitude",
+    subTopic: "",
     difficulty: "medium",
     explanation: "",
     questionType: "mcq",
@@ -170,72 +171,109 @@ export default function CreateQuestionDialog({ onCreated }) {
         )}
 
         {/* TOPIC */}
-        <Input
-          placeholder="Topic (DBMS, OS...)"
-          value={form.topic}
-          onChange={(e) =>
-            setForm({
-              ...form,
-              topic: e.target.value,
-            })
-          }
-        />
+        <div className="flex flex-col gap-2">
+          <h3 className="font-semibold">Topic</h3>
+          <Select
+            defaultValue="aptitude"
+            onValueChange={(v) =>
+              setForm({
+                ...form,
+                topic: v,
+              })
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select Topic" />
+            </SelectTrigger>
+
+            <SelectContent>
+              <SelectItem value="aptitude">Aptitude</SelectItem>
+              <SelectItem value="reasoning">Reasoning</SelectItem>
+              <SelectItem value="verbal">Verbal</SelectItem>
+              <SelectItem value="coding">Coding</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* SUBTOPIC */}
+        <div className="flex flex-col gap-2">
+          <h3 className="font-semibold">SubTopic</h3>
+          <Input
+            placeholder="Subtopic (Percentage,ratio and proportion).."
+            value={form.subTopic}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                subTopic: e.target.value,
+              })
+            }
+          />
+        </div>
 
         {/* DIFFICULTY */}
-        <Select
-          defaultValue="medium"
-          onValueChange={(v) =>
-            setForm({
-              ...form,
-              difficulty: v,
-            })
-          }
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
+        <div className="flex flex-col gap-1">
+          <h3 className="font-semibold">Difficulty</h3>
+          <Select
+            defaultValue="medium"
+            onValueChange={(v) =>
+              setForm({
+                ...form,
+                difficulty: v,
+              })
+            }
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
 
-          <SelectContent>
-            <SelectItem value="easy">Easy</SelectItem>
-            <SelectItem value="medium">Medium</SelectItem>
-            <SelectItem value="hard">Hard</SelectItem>
-          </SelectContent>
-        </Select>
+            <SelectContent>
+              <SelectItem value="easy">Easy</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="hard">Hard</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
         {/* COGNITIVE */}
-        <Select
-          defaultValue="apply"
-          onValueChange={(v) =>
-            setForm({
-              ...form,
-              cognitiveLevel: v,
-            })
-          }
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
+        <div className="flex flex-col gap-1">
+          <h3 className="font-semibold">Cognitive</h3>
+          <Select
+            defaultValue="apply"
+            onValueChange={(v) =>
+              setForm({
+                ...form,
+                cognitiveLevel: v,
+              })
+            }
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
 
-          <SelectContent>
-            <SelectItem value="remember">Remember</SelectItem>
+            <SelectContent>
+              <SelectItem value="remember">Remember</SelectItem>
 
-            <SelectItem value="understand">Understand</SelectItem>
+              <SelectItem value="understand">Understand</SelectItem>
 
-            <SelectItem value="apply">Apply</SelectItem>
+              <SelectItem value="apply">Apply</SelectItem>
 
-            <SelectItem value="analyze">Analyze</SelectItem>
-          </SelectContent>
-        </Select>
+              <SelectItem value="analyze">Analyze</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
         {/* COMPANY */}
-        <CompanyDropdown
-          onChange={(val) =>
-            setForm({
-              ...form,
-              companyTags: [val],
-            })
-          }
-        />
+        <div className="flex flex-col gap-1">
+          <h3 className="font-semibold">Company</h3>
+          <CompanyDropdown
+            onChange={(val) =>
+              setForm({
+                ...form,
+                companyTags: [val],
+              })
+            }
+          />
+        </div>
 
         {/* EXPLANATION */}
         <Textarea

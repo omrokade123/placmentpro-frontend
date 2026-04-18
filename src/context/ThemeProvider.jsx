@@ -3,13 +3,15 @@ import { createContext, useEffect, useState } from "react";
 export const ThemeContext = createContext();
 
 export default function ThemeProvider({ children }) {
-
-  const [theme, setTheme] = useState(
-    localStorage.getItem("theme") || "light"
-  );
+  const getInitialTheme = () => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("theme") || "light";
+    }
+    return "light";
+  };
+  const [theme, setTheme] = useState(getInitialTheme());
 
   useEffect(() => {
-
     const root = window.document.documentElement;
 
     if (theme === "dark") {
@@ -19,13 +21,10 @@ export default function ThemeProvider({ children }) {
     }
 
     localStorage.setItem("theme", theme);
-
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme(prev =>
-      prev === "dark" ? "light" : "dark"
-    );
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   };
 
   return (

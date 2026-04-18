@@ -182,9 +182,12 @@ const Home = () => {
             <Separator />
 
             {/* SELF DESCRIPTION */}
-
+            <div className="flex items-center gap-2">
+                <FileText size={16} />
+                <span>Self Description</span>
+              </div>
             <Textarea
-              placeholder="Or describe your skills, experience, and background here..."
+              placeholder="describe your skills, experience, and background here..."
               value={selfDescription}
               onChange={(e) => setSelfDescription(e.target.value)}
               className="min-h-32 border-2 border-gray-200 dark:border-gray-700 focus:border-purple-500 dark:focus:border-purple-400"
@@ -193,7 +196,7 @@ const Home = () => {
 
             <Alert className="bg-blue-50 dark:bg-blue-950/30 border-2 border-blue-200 dark:border-blue-800">
               <AlertDescription className="text-blue-900 dark:text-blue-200 font-medium">
-                💡 Tip: Either a resume or self description is required.
+                💡 Tip: Both a resume and self description are required.
               </AlertDescription>
             </Alert>
 

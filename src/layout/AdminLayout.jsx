@@ -1,20 +1,24 @@
 import { NavLink, Outlet } from "react-router-dom";
 
 import {
- LayoutDashboard,
- Briefcase,
- Building2,
- LogOut
+  LayoutDashboard,
+  Briefcase,
+  Building2,
+  LogOut,
+  Moon,
+  Sun,
 } from "lucide-react";
 
 import { useAuth } from "@/context/AuthContext";
+import { ThemeContext } from "@/context/ThemeProvider";
+import { useContext } from "react";
 
 export default function AdminLayout() {
+  const { logout } = useAuth();
+  const { theme, toggleTheme } = useContext(ThemeContext);
 
- const { logout } = useAuth();
-
- const navStyle = ({ isActive }) =>
-   `
+  const navStyle = ({ isActive }) =>
+    `
    flex items-center gap-3
    px-4 py-3
    rounded-xl
@@ -28,12 +32,11 @@ export default function AdminLayout() {
    }
    `;
 
- return (
-
-<div className="flex min-h-screen bg-gray-100">
-
-  {/* 🔥 SIDEBAR */}
-  <aside className="
+  return (
+    <div className="flex min-h-screen bg-gray-100">
+      {/* 🔥 SIDEBAR */}
+      <aside
+        className="
     w-72
     bg-black
     text-white
@@ -41,89 +44,87 @@ export default function AdminLayout() {
     flex-col
     justify-between
     p-6
-  ">
+  "
+      >
+        {/* TOP */}
+        <div>
+          <h1 className="text-2xl font-bold mb-10">
+            PlacementPro
+            <span className="text-gray-400 text-sm ml-2">Admin</span>
+          </h1>
 
-    {/* TOP */}
-    <div>
+          <nav className="space-y-2">
+            <NavLink to="/admin" end className={navStyle}>
+              <LayoutDashboard size={20} />
+              Dashboard
+            </NavLink>
 
-      <h1 className="text-2xl font-bold mb-10">
-        PlacementPro
-        <span className="text-gray-400 text-sm ml-2">
-          Admin
-        </span>
-      </h1>
+            <NavLink to="/admin/experiences" className={navStyle}>
+              <Briefcase size={20} />
+              Experiences
+            </NavLink>
 
-      <nav className="space-y-2">
+            <NavLink to="/admin/companies" className={navStyle}>
+              <Building2 size={20} />
+              Companies
+            </NavLink>
+            <NavLink to="/admin/questions" className={navStyle}>
+              <Building2 size={20} />
+              questions
+            </NavLink>
+          </nav>
+        </div>
 
-        <NavLink to="/admin" end className={navStyle}>
-          <LayoutDashboard size={20}/>
-          Dashboard
-        </NavLink>
-
-        <NavLink
-          to="/admin/experiences"
-          className={navStyle}
-        >
-          <Briefcase size={20}/>
-          Experiences
-        </NavLink>
-
-        <NavLink
-          to="/admin/companies"
-          className={navStyle}
-        >
-          <Building2 size={20}/>
-          Companies
-        </NavLink>
-        <NavLink
-          to="/admin/questions"
-          className={navStyle}
-        >
-          <Building2 size={20}/>
-          questions
-        </NavLink>
-      </nav>
-
-    </div>
-
-
-    {/* 🔥 LOGOUT */}
-    <button
-      onClick={logout}
-      className="
+        {/* 🔥 LOGOUT */}
+        <button
+          onClick={logout}
+          className="
         flex items-center gap-3
         text-gray-400
         hover:text-white
         transition
       "
-    >
-      <LogOut size={18}/>
-      Logout
-    </button>
+        >
+          <LogOut size={18} />
+          Logout
+        </button>
+      </aside>
 
-  </aside>
-
-
-
-  {/* 🔥 MAIN AREA */}
-  <div className="flex-1 flex flex-col">
-
-    {/* TOPBAR */}
-    <header className="
+      {/* 🔥 MAIN AREA */}
+      <div className="flex-1 flex flex-col ">
+        {/* TOPBAR */}
+        <header
+          className="
       bg-white
+      dark:bg-gray-950
+      border-gray-200 
+      dark:border-gray-
       shadow-sm
       px-8
       py-4
       flex
       justify-between
       items-center
-    ">
+    "
+        >
+          <h2 className="text-xl font-semibold tracking-tight">Admin Panel</h2>
 
-      <h2 className="text-xl font-semibold">
-        Admin Panel
-      </h2>
-
-      <div className="
+          <div className="flex items-center gap-4">
+            {/* 🌙 THEME TOGGLE */}
+            <button
+              onClick={toggleTheme}
+              className="
+          p-2 rounded-lg
+          hover:bg-gray-100
+          hover:scale-105
+          dark:hover:bg-gray-800
+          transition
+          "
+            >
+              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+            <div
+              className="
         w-10 h-10
         rounded-full
         bg-black
@@ -132,21 +133,18 @@ export default function AdminLayout() {
         items-center
         justify-center
         font-bold
-      ">
-        A
+      "
+            >
+              A
+            </div>
+          </div>
+        </header>
+
+        {/* CONTENT */}
+        <main className="p-8">
+          <Outlet />
+        </main>
       </div>
-
-    </header>
-
-
-    {/* CONTENT */}
-    <main className="p-8">
-      <Outlet />
-    </main>
-
-  </div>
-
-</div>
-
- );
+    </div>
+  );
 }

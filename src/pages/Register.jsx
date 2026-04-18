@@ -68,7 +68,7 @@ export default function Register() {
           </div>
 
           <Button
-            className="w-full"
+            className="w-full hover:bg-blue-800 bg-blue-500 text-white"
             onClick={handleRegister}
           >
             Create Account
@@ -76,7 +76,7 @@ export default function Register() {
 
           <p className="text-sm text-center text-gray-500">
             Already have an account?{" "}
-            <Link to="/login" className="font-medium">
+            <Link to="/login" className="font-medium text-blue-500">
               Sign in
             </Link>
           </p>

@@ -1,7 +1,12 @@
 import {
   getAllInterviewReports,
   generateInterviewReport,
-  getInterviewReportById
+  getInterviewReportById,
+  scheduleInterview,
+  startInterview,
+  submitInterviewAnswer,
+  getInterviewSession,
+
 } from "../services/interview.api";
 
 import { useContext } from "react";
@@ -85,12 +90,84 @@ export const useInterview = () => {
     }
   };
 
+  const scheduleMockInterview = async (reportId) => {
+
+    setLoading(true);
+
+    try {
+
+      const response = await scheduleInterview(reportId);
+
+      return response;
+
+    } catch (error) {
+      console.error("Error scheduling interview:", error);
+    } finally {
+      setLoading(false);
+    }
+
+  };
+
+  const startMockInterview = async (interviewId) => {
+
+    setLoading(true);
+
+    try {
+
+      const response = await startInterview(interviewId);
+
+      return response;
+
+    } catch (error) {
+      console.error("Error starting interview:", error);
+    } finally {
+      setLoading(false);
+    }
+
+  };
+
+  const submitAnswer = async (interviewId, answer) => {
+
+    setLoading(true);
+
+    try {
+
+      const response = await submitInterviewAnswer(interviewId, answer);
+
+      return response;
+
+    } catch (error) {
+      console.error("Error submitting answer:", error);
+    } finally {
+      setLoading(false);
+    }
+
+  };
+
+  const checkInterviewSession = async (reportId) => {
+
+    try {
+
+      const response = await getInterviewSession(reportId);
+
+      return response.interview;
+
+    } catch (error) {
+      console.error("Error checking interview session", error);
+    }
+
+  };
+
   return {
     loading,
     report,
     reports,
     generateReport,
     getReportById,
-    getReports
+    getReports,
+    scheduleMockInterview,
+    startMockInterview,
+    submitAnswer,
+    checkInterviewSession
   };
 };

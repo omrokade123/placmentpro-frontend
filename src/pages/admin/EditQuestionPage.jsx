@@ -115,7 +115,8 @@ export default function EditQuestionPage() {
   //--------------------------------
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-200">
+    <div className="max-w-4xl mx-auto space-y-6 py-10">
       <h1 className="text-3xl font-bold">Edit Question</h1>
 
       {/* QUESTION */}
@@ -235,6 +236,7 @@ export default function EditQuestionPage() {
       <Button disabled={saving} onClick={update}>
         {saving ? "Saving..." : "Update Question"}
       </Button>
+    </div>
     </div>
   );
 }

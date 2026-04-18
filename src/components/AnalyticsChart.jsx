@@ -14,7 +14,6 @@ import { TrendingUp } from "lucide-react";
 
 export default function AnalyticsChart({ data }) {
   if (!data?.length) return null;
-
   // Custom tooltip
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {

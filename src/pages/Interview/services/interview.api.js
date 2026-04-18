@@ -8,13 +8,13 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
 
-  const token = localStorage.getItem("token")
+    const token = localStorage.getItem("token")
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
-  }
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+    }
 
-  return config
+    return config
 })
 
 
@@ -63,20 +63,64 @@ export const getInterviewReportById = async (interviewId) => {
  */
 export const getAllInterviewReports = async () => {
     const userId = localStorage.getItem("userId")
-    const response = await api.get("/interview/",{
+    const response = await api.get("/interview/", {
         params: { userId }
     })
     return response.data
 }
 
+/**
+ * @description Schedule a mock interview based on generated report
+ */
+export const scheduleInterview = async (reportId) => {
+
+    const response = await api.post(`/interview/schedule/${reportId}`, {
+        scheduledAt: new Date()
+    });
+
+    return response.data;
+};
 
 /**
- * @description Service to generate resume pdf based on user self description, resume content and job description.
+ * @description Start interview session
  */
-// export const generateResumePdf = async ({ interviewReportId }) => {
-//     const response = await api.post(`/interview/resume/pdf/${interviewReportId}`, null, {
-//         responseType: "blob"
-//     })
+export const startInterview = async (interviewId) => {
 
-//     return response.data
-// }
+    const response = await api.post(`/interview/start/${interviewId}`);
+
+    return response.data;
+};
+
+/**
+ * @description Submit answer for current interview question
+ */
+export const submitInterviewAnswer = async (interviewId, answer) => {
+
+    const response = await api.post(`/interview/answer/${interviewId}`, {
+        answer
+    });
+
+    return response.data;
+};
+
+/**
+ * @description get user session from previous feedback
+ */
+export const getInterviewSession = async (reportId) => {
+
+  const response = await api.get(`/interview/session/${reportId}`);
+
+  return response.data;
+
+};
+
+
+/**
+ * @description Get AI feedback for completed interview
+ */
+// export const getInterviewFeedback = async (interviewId) => {
+
+//     const response = await api.get(`/interview/feedback/${interviewId}`);
+
+//     return response.data;
+// };

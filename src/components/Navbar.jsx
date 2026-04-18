@@ -82,9 +82,9 @@ export default function Navbar() {
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-
-            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate("/profile")}>
+              Profile
+            </DropdownMenuItem>
 
             <DropdownMenuSeparator />
 

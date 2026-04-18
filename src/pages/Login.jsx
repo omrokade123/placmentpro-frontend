@@ -63,13 +63,13 @@ export default function Login() {
             />
           </div>
 
-          <Button className="w-full" onClick={handleLogin}>
+          <Button className="w-full hover:bg-blue-800 bg-blue-500 text-white" onClick={handleLogin}>
             Sign In
           </Button>
 
           <p className="text-sm text-center text-gray-500">
             Don't have an account?{" "}
-            <Link to="/register" className="text-black font-medium">
+            <Link to="/register" className="text-blue-500 font-medium">
               Sign up
             </Link>
           </p>

@@ -3,6 +3,7 @@ import AppRoutes from "./routes/AppRoutes";
 import ThemeProvider from "./context/ThemeProvider";
 import { Toaster } from "react-hot-toast";
 import { InterviewProvider } from "./pages/Interview/interview.context";
+import "./App.css";
 
 function App() {
   return (

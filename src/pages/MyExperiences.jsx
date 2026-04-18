@@ -16,7 +16,6 @@ export default function MyExperiences() {
         const res = await API.get("/experiences/my", {
           user,
         });
-        console.log(res);
         setData(res.data);
       } catch (err) {
         console.log(err);
