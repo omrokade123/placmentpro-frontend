@@ -89,6 +89,7 @@ const questionsOptions = [
   { value: "10", time: 15 },
   { value: "15", time: 23 },
   { value: "20", time: 30 },
+  { value:"50" , time: 65 },
 ];
 
 // ── Component ─────────────────────────────────────────────────────────────────

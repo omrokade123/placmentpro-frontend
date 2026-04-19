@@ -246,7 +246,7 @@ export default function ExperienceCard({ exp, onUpdate }) {
             <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
               <User size={14} />
               <span className="truncate max-w-30">
-                {exp.userId?.name || "Anonymous"}
+                {exp.userId?.name || "Admin"}
               </span>
             </div>
 

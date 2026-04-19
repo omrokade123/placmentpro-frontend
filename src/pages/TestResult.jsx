@@ -397,6 +397,17 @@ export default function TestResult() {
                         </span>
                       </p>
                     </div>
+                    <div className="flex items-start gap-2">
+                      <p className="text-sm">
+                        <span className="font-semibold text-gray-700 dark:text-gray-300">
+                          Description:
+                        </span>{" "}
+                        <span className="text-gray-700 dark:text-gray-300">
+                          {item.description && String(item.description).trim() !== ""? String(item.description).trim() : "N/A"}
+                        </span>
+                      </p>
+
+                    </div>
                   </div>
                 )}
               </CardContent>
